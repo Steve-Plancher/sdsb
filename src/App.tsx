@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase'
 import { HabitDetailView } from '@/views/habit-detail'
 import { HabitsView } from '@/views/habits'
 import { InsightsView } from '@/views/insights'
+import { TaskDetailView } from '@/views/task-detail'
 import { TodayView } from '@/views/today'
 
 export default function App() {
@@ -53,7 +54,8 @@ function SignedIn({ email }: { email: string }) {
         </div>
       )}
 
-      {route.tab === 'today' && <TodayView brain={brain} />}
+      {route.tab === 'today' &&
+        ('taskId' in route ? <TaskDetailView brain={brain} taskId={route.taskId} /> : <TodayView brain={brain} />)}
       {route.tab === 'habits' &&
         ('habitId' in route ? <HabitDetailView brain={brain} habitId={route.habitId} /> : <HabitsView brain={brain} />)}
       {route.tab === 'insights' && <InsightsView brain={brain} />}

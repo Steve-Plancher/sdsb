@@ -20,7 +20,7 @@ so local testing touches real data.
 
 ## Shape
 
-Three tabs, matching the iOS mockups: **Today** (progress ring, tasks, today's
+Three tabs, matching the iOS mockups: **Today** (progress ring, tasks — tap one to edit its title, due date and priority — today’s
 habit checks), **Habits** (7-day rows; tap → per-habit detail with streak,
 stats and a tickable month calendar) and **Insights** (Week/Month/Year trend,
 consistency heatmap, highlights). Phones get a bottom tab bar; wider screens
@@ -28,7 +28,8 @@ get the tabs in the header.
 
 ```
 supabase/migrations/   schema + RLS (the source of truth for the database)
-src/lib/router.ts      hash routes: #/today #/habits #/habits/<id> #/insights
+src/lib/router.ts      hash routes: #/today #/tasks/<id> #/habits #/habits/<id> #/insights
+src/lib/tasks.ts       due-date wording and priority labels, shared by list and detail
 src/lib/supabase.ts    client + "remember this device" session storage
 src/lib/api.ts         typed data calls; user_id comes from the DB default
 src/lib/dates.ts       DayKey helpers, streaks, month grid, weekday totals

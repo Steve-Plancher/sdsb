@@ -3,16 +3,18 @@ import { useEffect, useState } from 'react'
 /**
  * Hash routes, so each tab has its own address, the phone's back gesture works,
  * and Vercel needs no rewrite rules:
- *   #/today   #/habits   #/habits/<id>   #/insights
+ *   #/today   #/tasks/<id>   #/habits   #/habits/<id>   #/insights
  */
 export type Route =
   | { tab: 'today' }
+  | { tab: 'today'; taskId: number }
   | { tab: 'habits' }
   | { tab: 'habits'; habitId: number }
   | { tab: 'insights' }
 
 export function parseRoute(hash: string): Route {
   const [, tab, id] = hash.replace(/^#/, '').split('/')
+  if (tab === 'tasks' && id && /^\d+$/.test(id)) return { tab: 'today', taskId: Number(id) }
   if (tab === 'habits' && id && /^\d+$/.test(id)) return { tab: 'habits', habitId: Number(id) }
   if (tab === 'habits') return { tab: 'habits' }
   if (tab === 'insights') return { tab: 'insights' }
@@ -21,6 +23,7 @@ export function parseRoute(hash: string): Route {
 
 export const href = {
   today: '#/today',
+  task: (id: number) => `#/tasks/${id}`,
   habits: '#/habits',
   habit: (id: number) => `#/habits/${id}`,
   insights: '#/insights',

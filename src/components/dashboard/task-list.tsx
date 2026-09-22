@@ -1,9 +1,34 @@
-import { Plus, Trash2 } from 'lucide-react'
+import { CalendarDays, Flag, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle } from '@/components/ui/check-circle'
 import type { Task } from '@/lib/api'
+import { href } from '@/lib/router'
+import { describeDue, priorityLabel, priorityTone } from '@/lib/tasks'
 import { cn } from '@/lib/utils'
+
+/** The one-line summary under a task: due date and priority, only when set. */
+function TaskMeta({ task }: { task: Task }) {
+  const due = describeDue(task.due_date, task.done)
+  const hasPriority = task.priority !== 'none'
+  if (!due && !hasPriority) return null
+  return (
+    <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[13px] font-semibold">
+      {due && (
+        <span className={cn('inline-flex items-center gap-1', due.overdue ? 'text-critical' : due.soon ? 'text-accent' : 'text-ink-muted')}>
+          <CalendarDays size={13} aria-hidden="true" />
+          {due.overdue || due.label === 'Today' || due.label === 'Tomorrow' ? due.label : `Due ${due.label}`}
+        </span>
+      )}
+      {hasPriority && (
+        <span className={cn('inline-flex items-center gap-1', task.done ? 'text-ink-muted' : priorityTone[task.priority])}>
+          <Flag size={13} className="fill-current" aria-hidden="true" />
+          {priorityLabel(task.priority)}
+        </span>
+      )}
+    </span>
+  )
+}
 
 type Props = {
   tasks: Task[]
@@ -57,14 +82,17 @@ export function TaskList({ tasks, onAdd, onToggle, onRemove }: Props) {
                 onToggle={() => onToggle(task)}
                 label={task.done ? `Mark “${task.title}” as not done` : `Mark “${task.title}” as done`}
               />
-              <span
-                className={cn(
-                  'min-w-0 flex-1 py-3 text-[16px] leading-snug break-words',
-                  task.done ? 'text-ink-muted line-through' : 'text-ink',
-                )}
-              >
-                {task.title}
-              </span>
+              <a href={href.task(task.id)} className="min-w-0 flex-1 py-3">
+                <span
+                  className={cn(
+                    'block text-[16px] leading-snug break-words',
+                    task.done ? 'text-ink-muted line-through' : 'text-ink',
+                  )}
+                >
+                  {task.title}
+                </span>
+                <TaskMeta task={task} />
+              </a>
               <button
                 type="button"
                 onClick={() => onRemove(task)}

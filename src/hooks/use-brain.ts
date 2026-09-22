@@ -79,6 +79,16 @@ export function useBrain() {
     [attempt],
   )
 
+  const updateTask = useCallback(
+    (task: Task, patch: Partial<Pick<Task, 'title' | 'due_date' | 'priority'>>) =>
+      attempt(async () => {
+        setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, ...patch } : t)))
+        const saved = await api.tasks.update(task.id, patch)
+        setTasks((prev) => prev.map((t) => (t.id === saved.id ? saved : t)))
+      }),
+    [attempt],
+  )
+
   const removeTask = useCallback(
     (task: Task) =>
       attempt(async () => {
@@ -133,6 +143,7 @@ export function useBrain() {
     dismissError: () => setError(null),
     addTask,
     toggleTask,
+    updateTask,
     removeTask,
     addHabit,
     toggleEntry,
