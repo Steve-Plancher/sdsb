@@ -54,3 +54,27 @@ export function longestStreak(dates: Set<DayKey>): number {
 }
 
 export const prettyDay = (key: DayKey) => format(new Date(`${key}T00:00:00`), 'EEE d MMM')
+
+export const fromKey = (key: DayKey) => new Date(`${key}T00:00:00`)
+
+/**
+ * A month as calendar rows starting on Sunday, iOS-style. Blank slots are null,
+ * so every row has seven cells.
+ */
+export function monthGrid(year: number, month: number): (DayKey | null)[][] {
+  const first = new Date(year, month, 1)
+  const days = new Date(year, month + 1, 0).getDate()
+  const cells: (DayKey | null)[] = Array.from({ length: first.getDay() }, () => null)
+  for (let d = 1; d <= days; d++) cells.push(toKey(new Date(year, month, d)))
+  while (cells.length % 7) cells.push(null)
+  return Array.from({ length: cells.length / 7 }, (_, r) => cells.slice(r * 7, r * 7 + 7))
+}
+
+export const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+/** Check-ins per weekday (0 = Sunday) across the given days. */
+export function weekdayTotals(days: DayKey[], countsByDay: Map<DayKey, number>): number[] {
+  const totals = [0, 0, 0, 0, 0, 0, 0]
+  for (const d of days) totals[fromKey(d).getDay()] += countsByDay.get(d) ?? 0
+  return totals
+}

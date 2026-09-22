@@ -139,3 +139,5 @@ export function useBrain() {
     removeHabit,
   }
 }
+
+export type Brain = ReturnType<typeof useBrain>
