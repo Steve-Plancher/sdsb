@@ -1,41 +1,30 @@
 import { useEffect, useState } from 'react'
 
-type Theme = 'light' | 'dark'
+export type ThemeMode = 'system' | 'light' | 'dark'
 
-/** Follows the OS until the viewer picks a mode; the pick is remembered per device. */
+const KEY = 'sdsb-theme'
+
+/** System (follow the phone), Light or Dark — remembered per device. */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme | null>(() => {
+  const [mode, setModeState] = useState<ThemeMode>(() => {
     try {
-      const saved = localStorage.getItem('sdsb-theme')
-      return saved === 'light' || saved === 'dark' ? saved : null
+      const saved = localStorage.getItem(KEY)
+      return saved === 'light' || saved === 'dark' ? saved : 'system'
     } catch {
-      return null
+      return 'system'
     }
   })
 
   useEffect(() => {
-    if (theme) document.documentElement.dataset.theme = theme
-    else delete document.documentElement.dataset.theme
+    if (mode === 'system') delete document.documentElement.dataset.theme
+    else document.documentElement.dataset.theme = mode
     try {
-      if (theme) localStorage.setItem('sdsb-theme', theme)
+      if (mode === 'system') localStorage.removeItem(KEY)
+      else localStorage.setItem(KEY, mode)
     } catch {
       /* private mode — the choice just won't persist */
     }
-  }, [theme])
+  }, [mode])
 
-  // Track the OS setting live, so the icon stays right if the phone flips to
-  // dark mode at sunset while SDSB is open.
-  const [systemDark, setSystemDark] = useState(
-    () => window.matchMedia('(prefers-color-scheme: dark)').matches,
-  )
-  useEffect(() => {
-    const query = window.matchMedia('(prefers-color-scheme: dark)')
-    const onChange = (e: MediaQueryListEvent) => setSystemDark(e.matches)
-    query.addEventListener('change', onChange)
-    return () => query.removeEventListener('change', onChange)
-  }, [])
-
-  const effective: Theme = theme ?? (systemDark ? 'dark' : 'light')
-
-  return { theme: effective, toggle: () => setTheme(effective === 'dark' ? 'light' : 'dark') }
+  return { mode, setMode: setModeState }
 }

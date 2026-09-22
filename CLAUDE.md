@@ -63,6 +63,26 @@ Apply SQL through the Management API (`POST /v1/projects/<ref>/database/query`)
 and record the version in `supabase_migrations.schema_migrations` so a later
 `db push` from another network doesn't re-run it.
 
+## Reminders (Web Push)
+
+- Settings (`#/settings`, gear top-right) holds Appearance, Notifications,
+  reminder offsets (30 min, 1 h, 3 h, 1/2/5 days), the default time for
+  date-only tasks, and Sign out. Stored in `user_settings` (one row per user,
+  with the browser's IANA timezone kept current by `use-settings`).
+- Each device that turns notifications on is a row in `push_subscriptions`.
+  iPhone only allows this when SDSB is opened from the Home Screen (iOS 16.4+).
+- `pg_cron` job `sdsb-reminders` calls the `send-reminders` Edge Function every
+  minute with a shared secret from Vault (`sdsb_cron_secret`). The function
+  asks `due_reminders()` what's due, claims each one in `reminder_log` (so it
+  sends once; `due_at` is in the key, so moving a due date re-arms it) and
+  pushes via `npm:web-push`. Dead subscriptions (404/410) are deleted.
+- A reminder only goes out within 15 minutes of its moment and before the
+  task is due, so nothing stale is sent in a burst.
+- VAPID keys and `CRON_SECRET` are Supabase function secrets; the public key is
+  also `VITE_VAPID_PUBLIC_KEY` in Vercel. Deploy the function with
+  `supabase functions deploy send-reminders --use-api --no-verify-jwt`.
+- `public/sw.js` shows the push and opens `#/tasks/<id>` when it's tapped.
+
 ## Conventions
 
 - **Dates are `YYYY-MM-DD` local-time strings** (`DayKey`), never `Date` objects

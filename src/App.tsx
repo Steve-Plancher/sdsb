@@ -4,12 +4,14 @@ import { SdsbMark } from '@/components/brand/logo'
 import { AppShell } from '@/components/layout/app-shell'
 import { useAuth } from '@/hooks/use-auth'
 import { useBrain } from '@/hooks/use-brain'
+import { useSettings } from '@/hooks/use-settings'
 import { useTheme } from '@/hooks/use-theme'
 import { useRoute } from '@/lib/router'
 import { supabase } from '@/lib/supabase'
 import { HabitDetailView } from '@/views/habit-detail'
 import { HabitsView } from '@/views/habits'
 import { InsightsView } from '@/views/insights'
+import { SettingsView } from '@/views/settings'
 import { TaskDetailView } from '@/views/task-detail'
 import { TodayView } from '@/views/today'
 
@@ -30,16 +32,11 @@ export default function App() {
 function SignedIn({ email }: { email: string }) {
   const brain = useBrain()
   const route = useRoute()
-  const { theme, toggle } = useTheme()
+  const { mode, setMode } = useTheme()
+  const settings = useSettings()
 
   return (
-    <AppShell
-      route={route}
-      theme={theme}
-      onToggleTheme={toggle}
-      onSignOut={() => void supabase.auth.signOut()}
-      email={email}
-    >
+    <AppShell route={route}>
       {brain.error && (
         <div
           role="alert"
@@ -59,6 +56,15 @@ function SignedIn({ email }: { email: string }) {
       {route.tab === 'habits' &&
         ('habitId' in route ? <HabitDetailView brain={brain} habitId={route.habitId} /> : <HabitsView brain={brain} />)}
       {route.tab === 'insights' && <InsightsView brain={brain} />}
+      {route.tab === 'settings' && (
+        <SettingsView
+          settings={settings}
+          mode={mode}
+          onMode={setMode}
+          email={email}
+          onSignOut={() => void supabase.auth.signOut()}
+        />
+      )}
     </AppShell>
   )
 }

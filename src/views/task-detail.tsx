@@ -1,10 +1,10 @@
-import { CalendarDays, ChevronLeft, Flag, Trash2, X } from 'lucide-react'
+import { CalendarDays, ChevronLeft, Clock, Flag, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { SectionLabel } from '@/components/layout/app-shell'
 import { CheckCircle } from '@/components/ui/check-circle'
 import type { Brain } from '@/hooks/use-brain'
 import { href } from '@/lib/router'
-import { describeDue, PRIORITIES, priorityTone, quickDates } from '@/lib/tasks'
+import { describeDue, formatTime, PRIORITIES, priorityTone, quickDates } from '@/lib/tasks'
 import { cn } from '@/lib/utils'
 
 export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number }) {
@@ -64,7 +64,7 @@ export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number
     else if (next !== task.title) void brain.updateTask(task, { title: next })
   }
 
-  const due = describeDue(task.due_date, task.done)
+  const due = describeDue(task.due_date, task.due_time, task.done)
 
   return (
     <>
@@ -110,7 +110,7 @@ export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number
           {task.due_date && (
             <button
               type="button"
-              onClick={() => brain.updateTask(task, { due_date: null })}
+              onClick={() => brain.updateTask(task, { due_date: null, due_time: null })}
               className="-mr-2 flex h-11 items-center gap-1 rounded-full px-3 text-[14px] font-semibold text-ink-muted hover:text-ink"
             >
               <X size={15} aria-hidden="true" />
@@ -142,12 +142,43 @@ export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number
             <input
               type="date"
               value={task.due_date ?? ''}
-              onChange={(e) => brain.updateTask(task, { due_date: e.target.value || null })}
+              onChange={(e) =>
+                brain.updateTask(task, e.target.value ? { due_date: e.target.value } : { due_date: null, due_time: null })
+              }
               aria-label="Pick a due date"
               className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             />
           </label>
         </div>
+
+        {task.due_date && (
+          <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
+            <Clock size={20} className="text-accent" aria-hidden="true" />
+            <label htmlFor="due-time" className="flex-1 text-[16px] font-semibold text-ink">
+              {task.due_time ? formatTime(task.due_time) : 'Any time that day'}
+            </label>
+            <span className="relative flex h-10 items-center rounded-full border border-border bg-surface-0 px-4 text-[14px] font-semibold text-ink hover:border-accent">
+              {task.due_time ? 'Change' : 'Add a time'}
+              <input
+                id="due-time"
+                type="time"
+                value={task.due_time?.slice(0, 5) ?? ''}
+                onChange={(e) => brain.updateTask(task, { due_time: e.target.value ? `${e.target.value}:00` : null })}
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+              />
+            </span>
+            {task.due_time && (
+              <button
+                type="button"
+                onClick={() => brain.updateTask(task, { due_time: null })}
+                aria-label="Remove the time"
+                className="-mr-2 flex h-10 w-10 items-center justify-center rounded-full text-ink-muted hover:text-ink"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        )}
       </section>
 
       <SectionLabel>Priority</SectionLabel>

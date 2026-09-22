@@ -1,7 +1,6 @@
-import { ChartColumn, ListChecks, LogOut, Moon, Sprout, Sun, type LucideIcon } from 'lucide-react'
+import { ChartColumn, ListChecks, Settings, Sprout, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { SdsbWordmark } from '@/components/brand/logo'
-import { Button } from '@/components/ui/button'
 import { href, type Route } from '@/lib/router'
 import { cn } from '@/lib/utils'
 
@@ -13,14 +12,10 @@ const TABS: { tab: Route['tab']; label: string; href: string; icon: LucideIcon }
 
 type Props = {
   route: Route
-  theme: 'light' | 'dark'
-  onToggleTheme: () => void
-  onSignOut: () => void
-  email: string
   children: ReactNode
 }
 
-export function AppShell({ route, theme, onToggleTheme, onSignOut, email, children }: Props) {
+export function AppShell({ route, children }: Props) {
   return (
     <div className="min-h-dvh">
       <header className="sticky top-0 z-40 border-b border-border bg-surface-0/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
@@ -46,12 +41,17 @@ export function AppShell({ route, theme, onToggleTheme, onSignOut, email, childr
             ))}
           </nav>
 
-          <Button size="icon" onClick={onToggleTheme} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
-            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          </Button>
-          <Button size="icon" onClick={onSignOut} aria-label={`Sign out ${email}`} title={`Signed in as ${email}`}>
-            <LogOut size={16} />
-          </Button>
+          <a
+            href={href.settings}
+            aria-label="Settings"
+            aria-current={route.tab === 'settings' ? 'page' : undefined}
+            className={cn(
+              '-mr-2 flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-surface-2',
+              route.tab === 'settings' ? 'text-accent' : 'text-ink-secondary',
+            )}
+          >
+            <Settings size={21} aria-hidden="true" />
+          </a>
         </div>
       </header>
 

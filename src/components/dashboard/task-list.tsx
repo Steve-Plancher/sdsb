@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 
 /** The one-line summary under a task: due date and priority, only when set. */
 function TaskMeta({ task }: { task: Task }) {
-  const due = describeDue(task.due_date, task.done)
+  const due = describeDue(task.due_date, task.due_time, task.done)
   const hasPriority = task.priority !== 'none'
   if (!due && !hasPriority) return null
   return (
@@ -17,7 +17,7 @@ function TaskMeta({ task }: { task: Task }) {
       {due && (
         <span className={cn('inline-flex items-center gap-1', due.overdue ? 'text-critical' : due.soon ? 'text-accent' : 'text-ink-muted')}>
           <CalendarDays size={13} aria-hidden="true" />
-          {due.overdue || due.label === 'Today' || due.label === 'Tomorrow' ? due.label : `Due ${due.label}`}
+          {due.overdue || due.label.startsWith('Today') || due.label.startsWith('Tomorrow') ? due.label : `Due ${due.label}`}
         </span>
       )}
       {hasPriority && (

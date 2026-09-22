@@ -1,0 +1,14 @@
+{
+  "name": "SDSB — Steve Digital Second Brain",
+  "short_name": "SDSB",
+  "description": "Daily tasks, habits and streaks.",
+  "start_url": "/#/today",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f9f6",
+  "theme_color": "#f7f9f6",
+  "icons": [
+    { "src": "/brand/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

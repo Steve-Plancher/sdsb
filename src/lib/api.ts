@@ -7,6 +7,8 @@ export type Task = {
   done: boolean
   priority: 'none' | 'low' | 'med' | 'high'
   due_date: string | null
+  /** 'HH:MM:SS' local time, or null for an all-day task. */
+  due_time: string | null
   created_at: string
   completed_at: string | null
   sort_order: number
@@ -20,6 +22,17 @@ export type Habit = {
   archived: boolean
   created_at: string
   sort_order: number
+}
+
+/** Minutes before the due moment. The database only accepts these values. */
+export const REMINDER_OFFSETS = [30, 60, 180, 1440, 2880, 7200] as const
+export type ReminderOffset = (typeof REMINDER_OFFSETS)[number]
+
+export type UserSettings = {
+  reminder_offsets: ReminderOffset[]
+  /** 'HH:MM:SS' used for reminders on tasks that have a date but no time. */
+  default_due_time: string
+  timezone: string
 }
 
 export type HabitEntry = {
@@ -49,7 +62,7 @@ export const api = {
       ) as Task[],
     create: async (title: string) =>
       must(await supabase.from('tasks').insert({ title }).select().single()) as Task,
-    update: async (id: number, patch: Partial<Pick<Task, 'title' | 'notes' | 'done' | 'priority' | 'due_date' | 'sort_order'>>) =>
+    update: async (id: number, patch: Partial<Pick<Task, 'title' | 'notes' | 'done' | 'priority' | 'due_date' | 'due_time' | 'sort_order'>>) =>
       must(await supabase.from('tasks').update(patch).eq('id', id).select().single()) as Task,
     remove: async (id: number) => {
       must(await supabase.from('tasks').delete().eq('id', id))
@@ -85,6 +98,35 @@ export const api = {
       } else {
         must(await supabase.from('habit_entries').delete().eq('habit_id', habitId).eq('date', date))
       }
+    },
+  },
+  settings: {
+    /** The row is created on first use, so a missing one just means defaults. */
+    get: async () =>
+      must(
+        await supabase.from('user_settings').select('reminder_offsets, default_due_time, timezone').maybeSingle(),
+      ) as UserSettings | null,
+    save: async (patch: Partial<UserSettings>) =>
+      must(
+        await supabase
+          .from('user_settings')
+          .upsert({ ...patch, updated_at: new Date().toISOString() })
+          .select('reminder_offsets, default_due_time, timezone')
+          .single(),
+      ) as UserSettings,
+  },
+  push: {
+    save: async (sub: { endpoint: string; p256dh: string; auth: string; user_agent: string }) => {
+      // Re-enabling on the same device refreshes its keys instead of duplicating it.
+      must(await supabase.from('push_subscriptions').upsert(sub, { onConflict: 'endpoint' }))
+    },
+    remove: async (endpoint: string) => {
+      must(await supabase.from('push_subscriptions').delete().eq('endpoint', endpoint))
+    },
+    devices: async () => {
+      const { count, error } = await supabase.from('push_subscriptions').select('id', { count: 'exact', head: true })
+      if (error) throw new Error(error.message)
+      return count ?? 0
     },
   },
 }

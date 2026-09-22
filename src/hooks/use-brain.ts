@@ -80,7 +80,7 @@ export function useBrain() {
   )
 
   const updateTask = useCallback(
-    (task: Task, patch: Partial<Pick<Task, 'title' | 'due_date' | 'priority'>>) =>
+    (task: Task, patch: Partial<Pick<Task, 'title' | 'due_date' | 'due_time' | 'priority'>>) =>
       attempt(async () => {
         setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, ...patch } : t)))
         const saved = await api.tasks.update(task.id, patch)
