@@ -1,0 +1,257 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 2449,
+    "sha256": "ca22160cec7da90663d7bc29df4d673cadce5c2a0aa467f63a00747fa14493a1"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-dark-1024.png",
+    "bytes": 10764,
+    "sha256": "41b62843b0643f1d9e0e07be43c6e98fdb465914fbdf8188ee12cd11b0a902cb",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGB"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-dark.svg",
+    "bytes": 426,
+    "sha256": "59caf3530a692155c4b5eda5f9dd6284b4de25515f1216d8dcaa23e8e8a8ed1f",
+    "xml": "valid"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-light-1024.png",
+    "bytes": 10745,
+    "sha256": "effe1b5a50551e311a5ef64b6065497ce51deb9eb2e8a14fd9be1a1286e2d0ba",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGB"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-light.svg",
+    "bytes": 426,
+    "sha256": "586e3a07601419702be21f0398c40b7b3b515189f21f0f348e05010f535bbc2d",
+    "xml": "valid"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-tinted-1024.png",
+    "bytes": 10649,
+    "sha256": "55bb825239acc22d36456d485a223bac9922bd1f5a5fcbd5736411972db64497",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGB"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-tinted-foreground-1024.png",
+    "bytes": 10490,
+    "sha256": "1b16f6c1f2d44806ab9f8befa988eb366686ea463c1984bb15cc8d7e0df4dbd5",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA"
+  },
+  {
+    "path": "app-icons/sdsb-app-icon-tinted.svg",
+    "bytes": 426,
+    "sha256": "f79532a5c0bbb644a6c7cf5fd578f3a813c472e748ac9d3af3eb28b3dcac2fe1",
+    "xml": "valid"
+  },
+  {
+    "path": "brand-guide/sdsb-brand-guide.md",
+    "bytes": 2609,
+    "sha256": "434bff18ab1a76995a64acbb024080faaf83cfa75fbcd8baed878f67bcdeb79e"
+  },
+  {
+    "path": "brand-guide/sdsb-one-page-brand-guide.pdf",
+    "bytes": 241966,
+    "sha256": "2f5bd3a768d5f40bbc8de4f910892a2119dd728a8ec72d50c0edd6d3ac57cbac"
+  },
+  {
+    "path": "brand-guide/sdsb-one-page-brand-guide.png",
+    "bytes": 212238,
+    "sha256": "064cfb8f9c78149de44dea4ef9c72ed677c41304ab9d5d1952739165cd6889af",
+    "width": 1800,
+    "height": 2400,
+    "mode": "RGB"
+  },
+  {
+    "path": "launch/sdsb-app-store-screenshot-example-1290x2796.png",
+    "bytes": 129387,
+    "sha256": "d078ca71a30e7bf16fae0130ec440b7071e14bc8dc22f36761a02e1bbbc7ddc4",
+    "width": 1290,
+    "height": 2796,
+    "mode": "RGB"
+  },
+  {
+    "path": "launch/sdsb-app-store-screenshot-template-1290x2796.png",
+    "bytes": 105301,
+    "sha256": "b08237916d8a2fb13150349b41b0d6f38cb2db793ebb642466e8fc799fbb3098",
+    "width": 1290,
+    "height": 2796,
+    "mode": "RGB"
+  },
+  {
+    "path": "launch/sdsb-social-profile-1080x1080.png",
+    "bytes": 12426,
+    "sha256": "356359a2ba3133ba0c6c0b0cebec60f6d35543d08352019a55df49a9fba0d11c",
+    "width": 1080,
+    "height": 1080,
+    "mode": "RGB"
+  },
+  {
+    "path": "launch/sdsb-splash-dark-1290x2796.png",
+    "bytes": 34783,
+    "sha256": "6d8b22cd49b942c2f509acc3114b548a7782eb692593fc6011afbeb2a8258d90",
+    "width": 1290,
+    "height": 2796,
+    "mode": "RGB"
+  },
+  {
+    "path": "launch/sdsb-splash-light-1290x2796.png",
+    "bytes": 34741,
+    "sha256": "2a228a4654168d6c993fa67b71a8a104ab272654382fd59c62b82ad1e1e39f96",
+    "width": 1290,
+    "height": 2796,
+    "mode": "RGB"
+  },
+  {
+    "path": "logos/sdsb-horizontal-dark.svg",
+    "bytes": 578,
+    "sha256": "c731fa0f3c46f66ea80b5fc62749c3dd65f4b266c5aaf69d99941910034a635d",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-horizontal-mono-dark.svg",
+    "bytes": 530,
+    "sha256": "d6882558bb42f6e2aeba77ed97c20efd5f8ab91e7daffedff6f2f150d8cbf57c",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-horizontal-mono-light.svg",
+    "bytes": 578,
+    "sha256": "cadb1ffdc0fd31a68fcc78261b788ee3b31829cc8f5ac847bbd3bf888d996ea1",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-horizontal-primary.png",
+    "bytes": 17411,
+    "sha256": "cb96f10e340eda2f2b5b7f63a243342a11c0fc223f49bf8d1dc80a925ee68843",
+    "width": 1600,
+    "height": 520,
+    "mode": "RGBA"
+  },
+  {
+    "path": "logos/sdsb-horizontal-primary.svg",
+    "bytes": 530,
+    "sha256": "074080a331ae4dbbd7ad54331100970050b94feb205b9c2e900afb2f086d14ab",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-stacked-dark.svg",
+    "bytes": 582,
+    "sha256": "5b33fdf2170690cf234380650e522129b32d75def80a6e9eeefbbe3fa55acf0f",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-stacked-mono-dark.svg",
+    "bytes": 533,
+    "sha256": "93f8dbc6dc7215b8cba89532f58135b23ef900df87e91a708c0e58851cf0637a",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-stacked-mono-light.svg",
+    "bytes": 582,
+    "sha256": "aeebd6e2dc091753bcca0d341ae0938d35af31c9a5f1bbffd947bab3d72dc906",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-stacked-primary.png",
+    "bytes": 21812,
+    "sha256": "d2289ec414bb5e55178a09f35bd1bcb43d2ac9baf1ec61cfe8eed1d36e385b17",
+    "width": 1100,
+    "height": 1250,
+    "mode": "RGBA"
+  },
+  {
+    "path": "logos/sdsb-stacked-primary.svg",
+    "bytes": 533,
+    "sha256": "98adebdfd5eac56f03b594fced54b830adcb27b415bf31d83117a46a7be32038",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-symbol-mono-on-dark.png",
+    "bytes": 11817,
+    "sha256": "306a21614948686bb88e9675becdb8c09359af96ba09a06fc2fd6c4f425556ad",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA"
+  },
+  {
+    "path": "logos/sdsb-symbol-mono-on-light.png",
+    "bytes": 11815,
+    "sha256": "0c86b7b6131ffc4076899b290200d1a5fe8dc0d1f8472c97f7f6df8fd8c1e1ef",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA"
+  },
+  {
+    "path": "logos/sdsb-symbol-monochrome-dark.svg",
+    "bytes": 377,
+    "sha256": "fda036824cf7e20aab34d2d7b9a9d0af55594182c0610b43e15399cd7e95284c",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-symbol-monochrome-light.svg",
+    "bytes": 377,
+    "sha256": "e7876730511896e557d8b05c745e55e1e07c4dd937e7540f5b26f3b5acd52ed6",
+    "xml": "valid"
+  },
+  {
+    "path": "logos/sdsb-symbol-primary.png",
+    "bytes": 10729,
+    "sha256": "dab4e08aabf641531f4ef577a23ad6084be005a22464edd190db75fca1048fef",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA"
+  },
+  {
+    "path": "logos/sdsb-symbol-primary.svg",
+    "bytes": 377,
+    "sha256": "8705c04d3f483c82c44bae5eca8a20f232295a38e072b9f4473310367846b1e6",
+    "xml": "valid"
+  },
+  {
+    "path": "qa/sdsb-icon-stress-test.png",
+    "bytes": 58896,
+    "sha256": "31041fd76a79baf30c4f73ce27d9c0af1432730803cfd6df6adb046f9bce56af",
+    "width": 1500,
+    "height": 900,
+    "mode": "RGB"
+  },
+  {
+    "path": "qa/sdsb-main-assets-contact-sheet.jpg",
+    "bytes": 225861,
+    "sha256": "9dc83168012fef56a9e61f6c3d39e6b4ab85902e27c0b0ba65ddb4040989466a",
+    "width": 1800,
+    "height": 1800,
+    "mode": "RGB"
+  },
+  {
+    "path": "tokens/Manrope-OFL.txt",
+    "bytes": 4387,
+    "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+  },
+  {
+    "path": "tokens/Manrope-Variable.ttf",
+    "bytes": 164700,
+    "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+  },
+  {
+    "path": "tokens/sdsb-brand-tokens.json",
+    "bytes": 4745,
+    "sha256": "c5ce756deff806a06e9a60ddf76c84b596bca79b240aedd5aceedd15632350a5"
+  },
+  {
+    "path": "tokens/sdsb-canva-colors.csv",
+    "bytes": 1712,
+    "sha256": "4ee4f22b4d2bcc39177a099b9cc16c030054c0e20d0f5ac2f25642b709e797cd"
+  }
+]

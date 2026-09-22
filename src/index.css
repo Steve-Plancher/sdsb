@@ -1,0 +1,155 @@
+@import 'tailwindcss';
+
+/* Manrope, self-hosted (SIL OFL 1.1 — licence in /fonts/Manrope-OFL.txt). */
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/Manrope-Variable.ttf') format('truetype');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', monospace;
+}
+
+/* ---------------------------------------------------------------------------
+   SDSB tokens — Growth Rings brand (branding/v1/final/tokens).
+   Light values here; the dark blocks redefine the same names.
+   Muted text and streak text are derived from the brand palette to clear
+   4.5:1 on every surface; Pearl's streak orange is kept for the flame icon.
+--------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --surface-0: #f7f9f6;
+  --surface-1: #ffffff;
+  --surface-2: #eef3ef;
+  --border: #d7dfda;
+  --border-strong: #c0c8c3;
+
+  --text-primary: #17211e;
+  --text-secondary: #4d5c57;
+  --text-muted: #636f6b;
+
+  --accent: #2f6f62;
+  --accent-hover: #1f5b50;
+  --accent-ink: #ffffff;
+  --accent-soft: #7ea99a;
+
+  --good: #2458a6;
+  --warning: #a35a13;
+  --streak-icon: #c96f18;
+  --critical: #a7293b;
+
+  --series-1: #2f6f62;
+
+  /* Consistency heatmap: zero, then the brand ramp light to dark. */
+  --seq-0: #eef3ef;
+  --seq-1: #a8cfc0;
+  --seq-2: #6eaa95;
+  --seq-3: #397a6b;
+  --seq-4: #1f564b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
+    --surface-0: #0f1714;
+    --surface-1: #16201c;
+    --surface-2: #1d2b26;
+    --border: #31413a;
+    --border-strong: #44534c;
+
+    --text-primary: #eef5f1;
+    --text-secondary: #b7c4be;
+    --text-muted: #87938e;
+
+    --accent: #74ae9b;
+    --accent-hover: #9ed0bd;
+    --accent-ink: #0f1714;
+    --accent-soft: #3d6b5d;
+
+    --good: #8ab7ff;
+    --warning: #f1a24a;
+    --streak-icon: #f1a24a;
+    --critical: #ff8493;
+
+    --series-1: #74ae9b;
+
+    /* On dark, "more" must be the brightest step. */
+    --seq-0: #1d2b26;
+    --seq-1: #1d4f45;
+    --seq-2: #397565;
+    --seq-3: #5f9986;
+    --seq-4: #89b9a7;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --surface-0: #0f1714;
+  --surface-1: #16201c;
+  --surface-2: #1d2b26;
+  --border: #31413a;
+  --border-strong: #44534c;
+
+  --text-primary: #eef5f1;
+  --text-secondary: #b7c4be;
+  --text-muted: #87938e;
+
+  --accent: #74ae9b;
+  --accent-hover: #9ed0bd;
+  --accent-ink: #0f1714;
+  --accent-soft: #3d6b5d;
+
+  --good: #8ab7ff;
+  --warning: #f1a24a;
+  --streak-icon: #f1a24a;
+  --critical: #ff8493;
+
+  --series-1: #74ae9b;
+
+  --seq-0: #1d2b26;
+  --seq-1: #1d4f45;
+  --seq-2: #397565;
+  --seq-3: #5f9986;
+  --seq-4: #89b9a7;
+}
+
+@theme inline {
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--text-primary);
+  --color-ink-secondary: var(--text-secondary);
+  --color-ink-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-good: var(--good);
+  --color-warning: var(--warning);
+  --color-streak-icon: var(--streak-icon);
+  --color-critical: var(--critical);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  overflow-x: hidden;
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 28%, transparent);
+}

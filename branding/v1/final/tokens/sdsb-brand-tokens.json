@@ -1,0 +1,198 @@
+{
+  "name": "SDSB",
+  "concept": "Growth Rings",
+  "font": {
+    "family": "Manrope",
+    "license": "SIL Open Font License 1.1",
+    "source": "https://fonts.google.com/specimen/Manrope",
+    "scale": {
+      "largeTitle": {
+        "size": 34,
+        "lineHeight": 41,
+        "weight": 700
+      },
+      "title": {
+        "size": 28,
+        "lineHeight": 34,
+        "weight": 650
+      },
+      "headline": {
+        "size": 20,
+        "lineHeight": 26,
+        "weight": 650
+      },
+      "body": {
+        "size": 17,
+        "lineHeight": 24,
+        "weight": 400
+      },
+      "caption": {
+        "size": 13,
+        "lineHeight": 18,
+        "weight": 500
+      },
+      "stats": {
+        "size": 32,
+        "lineHeight": 36,
+        "weight": 700
+      }
+    }
+  },
+  "colors": {
+    "light": {
+      "brand": "#2F6F62",
+      "brandText": "#1F5B50",
+      "accent": "#87A89C",
+      "background": "#F7F9F6",
+      "surface": "#FFFFFF",
+      "elevated": "#EEF3EF",
+      "textPrimary": "#17211E",
+      "textSecondary": "#4D5C57",
+      "border": "#D7DFDA",
+      "success": "#2458A6",
+      "warning": "#8A4B00",
+      "error": "#A7293B",
+      "streak": "#C96F18",
+      "primaryRamp": [
+        "#DCEBE5",
+        "#A8CFC0",
+        "#6EAA95",
+        "#397A6B",
+        "#1F564B"
+      ]
+    },
+    "dark": {
+      "brand": "#74AE9B",
+      "brandText": "#9ED0BD",
+      "accent": "#8AA79F",
+      "background": "#0F1714",
+      "surface": "#16201C",
+      "elevated": "#1D2B26",
+      "textPrimary": "#EEF5F1",
+      "textSecondary": "#B7C4BE",
+      "border": "#31413A",
+      "success": "#8AB7FF",
+      "warning": "#F0B45A",
+      "error": "#FF8493",
+      "streak": "#F1A24A",
+      "primaryRamp": [
+        "#B8D8CC",
+        "#89B9A7",
+        "#5F9986",
+        "#397565",
+        "#1D4F45"
+      ]
+    }
+  },
+  "contrastChecks": [
+    {
+      "pair": "Light primary text / background",
+      "foreground": "#17211E",
+      "background": "#F7F9F6",
+      "ratio": 15.59,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Light primary text / surface",
+      "foreground": "#17211E",
+      "background": "#FFFFFF",
+      "ratio": 16.5,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Light secondary text / background",
+      "foreground": "#4D5C57",
+      "background": "#F7F9F6",
+      "ratio": 6.65,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Light secondary text / surface",
+      "foreground": "#4D5C57",
+      "background": "#FFFFFF",
+      "ratio": 7.04,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Light brand text / background",
+      "foreground": "#1F5B50",
+      "background": "#F7F9F6",
+      "ratio": 7.43,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Light brand text / surface",
+      "foreground": "#1F5B50",
+      "background": "#FFFFFF",
+      "ratio": 7.86,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "White text / Brand 500",
+      "foreground": "#FFFFFF",
+      "background": "#2F6F62",
+      "ratio": 5.88,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark primary text / background",
+      "foreground": "#EEF5F1",
+      "background": "#0F1714",
+      "ratio": 16.45,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark primary text / surface",
+      "foreground": "#EEF5F1",
+      "background": "#16201C",
+      "ratio": 15.08,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark secondary text / background",
+      "foreground": "#B7C4BE",
+      "background": "#0F1714",
+      "ratio": 10.11,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark secondary text / surface",
+      "foreground": "#B7C4BE",
+      "background": "#16201C",
+      "ratio": 9.27,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark brand text / background",
+      "foreground": "#9ED0BD",
+      "background": "#0F1714",
+      "ratio": 10.59,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark brand text / surface",
+      "foreground": "#9ED0BD",
+      "background": "#16201C",
+      "ratio": 9.71,
+      "wcag_aa_body": true
+    },
+    {
+      "pair": "Dark background text / Brand 400",
+      "foreground": "#0F1714",
+      "background": "#74AE9B",
+      "ratio": 7.17,
+      "wcag_aa_body": true
+    }
+  ],
+  "logo": {
+    "clearSpace": "1\u00d7 seed width on all sides",
+    "minimumSizes": {
+      "symbolDigital": "24px",
+      "appIcon": "29px",
+      "horizontalLockup": "96px wide",
+      "stackedLockup": "72px wide"
+    }
+  },
+  "statusGuidance": "Success uses blue so it cannot be confused with the brand green. Pair every status color with an icon or label.",
+  "streakGuidance": "Keep the streak indicator orange. It remains familiar, visible, and semantically separate from brand green."
+}

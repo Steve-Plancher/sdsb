@@ -1,0 +1,37 @@
+name,theme,hex,role
+SDSB Brand 500,Light,#2F6F62,Primary brand
+SDSB Brand Text,Light,#1F5B50,Accessible green text
+SDSB Accent,Light,#87A89C,Secondary accent
+SDSB Background,Light,#F7F9F6,App background
+SDSB Surface,Light,#FFFFFF,Cards and sheets
+SDSB Elevated,Light,#EEF3EF,Elevated surface
+SDSB Text Primary,Light,#17211E,Body and headings
+SDSB Text Secondary,Light,#4D5C57,Secondary copy
+SDSB Border,Light,#D7DFDA,Dividers and borders
+SDSB Success,Light,#2458A6,Success state
+SDSB Warning,Light,#8A4B00,Warning state
+SDSB Error,Light,#A7293B,Error state
+SDSB Streak,Light,#C96F18,Streak indicator
+SDSB Brand 400,Dark,#74AE9B,Primary brand
+SDSB Brand Text,Dark,#9ED0BD,Accessible green text
+SDSB Accent,Dark,#8AA79F,Secondary accent
+SDSB Background,Dark,#0F1714,App background
+SDSB Surface,Dark,#16201C,Cards and sheets
+SDSB Elevated,Dark,#1D2B26,Elevated surface
+SDSB Text Primary,Dark,#EEF5F1,Body and headings
+SDSB Text Secondary,Dark,#B7C4BE,Secondary copy
+SDSB Border,Dark,#31413A,Dividers and borders
+SDSB Success,Dark,#8AB7FF,Success state
+SDSB Warning,Dark,#F0B45A,Warning state
+SDSB Error,Dark,#FF8493,Error state
+SDSB Streak,Dark,#F1A24A,Streak indicator
+SDSB Green 100,Light ramp,#DCEBE5,Heatmap and progress
+SDSB Green 300,Light ramp,#A8CFC0,Heatmap and progress
+SDSB Green 500,Light ramp,#6EAA95,Heatmap and progress
+SDSB Green 700,Light ramp,#397A6B,Heatmap and progress
+SDSB Green 900,Light ramp,#1F564B,Heatmap and progress
+SDSB Green 100,Dark ramp,#B8D8CC,Heatmap and progress
+SDSB Green 300,Dark ramp,#89B9A7,Heatmap and progress
+SDSB Green 500,Dark ramp,#5F9986,Heatmap and progress
+SDSB Green 700,Dark ramp,#397565,Heatmap and progress
+SDSB Green 900,Dark ramp,#1D4F45,Heatmap and progress
