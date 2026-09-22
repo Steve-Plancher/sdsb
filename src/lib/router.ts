@@ -12,6 +12,7 @@ export type Route =
   | { tab: 'habits'; habitId: number }
   | { tab: 'insights' }
   | { tab: 'settings' }
+  | { tab: 'settings'; page: 'history' }
 
 export function parseRoute(hash: string): Route {
   const [, tab, id] = hash.replace(/^#/, '').split('/')
@@ -19,6 +20,7 @@ export function parseRoute(hash: string): Route {
   if (tab === 'habits' && id && /^\d+$/.test(id)) return { tab: 'habits', habitId: Number(id) }
   if (tab === 'habits') return { tab: 'habits' }
   if (tab === 'insights') return { tab: 'insights' }
+  if (tab === 'settings' && id === 'history') return { tab: 'settings', page: 'history' }
   if (tab === 'settings') return { tab: 'settings' }
   return { tab: 'today' }
 }
@@ -30,6 +32,7 @@ export const href = {
   habit: (id: number) => `#/habits/${id}`,
   insights: '#/insights',
   settings: '#/settings',
+  history: '#/settings/history',
 }
 
 export function useRoute(): Route {

@@ -9,6 +9,9 @@ export type Task = {
   due_date: string | null
   /** 'HH:MM:SS' local time, or null for an all-day task. */
   due_time: string | null
+  /** Repeat interval, e.g. 15 + 'day'. Both null when the task doesn't repeat. */
+  repeat_every: number | null
+  repeat_unit: 'hour' | 'day' | 'week' | 'month' | null
   created_at: string
   completed_at: string | null
   sort_order: number
@@ -33,6 +36,15 @@ export type UserSettings = {
   /** 'HH:MM:SS' used for reminders on tasks that have a date but no time. */
   default_due_time: string
   timezone: string
+}
+
+export type TaskCompletion = {
+  id: number
+  task_id: number | null
+  title: string
+  due_at: string | null
+  was_recurring: boolean
+  completed_at: string
 }
 
 export type HabitEntry = {
@@ -62,7 +74,7 @@ export const api = {
       ) as Task[],
     create: async (title: string) =>
       must(await supabase.from('tasks').insert({ title }).select().single()) as Task,
-    update: async (id: number, patch: Partial<Pick<Task, 'title' | 'notes' | 'done' | 'priority' | 'due_date' | 'due_time' | 'sort_order'>>) =>
+    update: async (id: number, patch: Partial<Pick<Task, 'title' | 'notes' | 'done' | 'priority' | 'due_date' | 'due_time' | 'repeat_every' | 'repeat_unit' | 'sort_order'>>) =>
       must(await supabase.from('tasks').update(patch).eq('id', id).select().single()) as Task,
     remove: async (id: number) => {
       must(await supabase.from('tasks').delete().eq('id', id))
@@ -98,6 +110,35 @@ export const api = {
       } else {
         must(await supabase.from('habit_entries').delete().eq('habit_id', habitId).eq('date', date))
       }
+    },
+  },
+  completions: {
+    /** Newest first, a page at a time. */
+    list: async (limit = 100, before?: string) => {
+      let q = supabase
+        .from('task_completions')
+        .select('id, task_id, title, due_at, was_recurring, completed_at')
+        .order('completed_at', { ascending: false })
+        .limit(limit)
+      if (before) q = q.lt('completed_at', before)
+      return must(await q) as TaskCompletion[]
+    },
+    create: async (entry: { task_id: number; title: string; due_at: string | null; was_recurring: boolean }) =>
+      must(await supabase.from('task_completions').insert(entry).select('id').single()) as { id: number },
+    remove: async (id: number) => {
+      must(await supabase.from('task_completions').delete().eq('id', id))
+    },
+    /** Un-ticking a task takes its latest completion back out of the history. */
+    removeLatestFor: async (taskId: number) => {
+      const rows = must(
+        await supabase
+          .from('task_completions')
+          .select('id')
+          .eq('task_id', taskId)
+          .order('completed_at', { ascending: false })
+          .limit(1),
+      ) as { id: number }[]
+      if (rows[0]) must(await supabase.from('task_completions').delete().eq('id', rows[0].id))
     },
   },
   settings: {

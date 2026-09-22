@@ -1,44 +1,52 @@
-import { CalendarDays, ChevronLeft, Clock, Flag, Trash2, X } from 'lucide-react'
+import { CalendarDays, Check, ChevronLeft, Clock, Flag, Repeat, StickyNote, Trash2, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { SectionLabel } from '@/components/layout/app-shell'
 import { CheckCircle } from '@/components/ui/check-circle'
 import type { Brain } from '@/hooks/use-brain'
 import { href } from '@/lib/router'
 import { describeDue, formatTime, PRIORITIES, priorityTone, quickDates } from '@/lib/tasks'
+import { formatNext, nextDue, REPEAT_UNITS, repeats, type RepeatUnit } from '@/lib/recurrence'
+import { today } from '@/lib/dates'
+
+const NOTE_LIMIT = 150
 import { cn } from '@/lib/utils'
 
 export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number }) {
   const task = brain.tasks.find((t) => t.id === taskId)
   const [title, setTitle] = useState(task?.title ?? '')
+  const [note, setNote] = useState(task?.notes ?? '')
+  const [noteOpen, setNoteOpen] = useState(!!task?.notes)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   // Pick up the title once the task list has loaded (deep link / refresh).
   useEffect(() => {
-    if (task) setTitle(task.title)
+    if (!task) return
+    setTitle(task.title)
+    setNote(task.notes)
+    setNoteOpen(!!task.notes)
   }, [task?.id])
 
   // Save a rename shortly after typing stops, not only on blur: a swipe-back
   // gesture can leave the screen without the field ever losing focus.
-  const latest = useRef({ task, title, brain })
-  latest.current = { task, title, brain }
+  const latest = useRef({ task, title, note, brain })
+  latest.current = { task, title, note, brain }
   useEffect(() => {
-    const flush = () => {
-      const { task: t, title: typed, brain: b } = latest.current
-      const next = typed.trim()
-      if (t && next && next !== t.title) void b.updateTask(t, { title: next })
-    }
-    const timer = window.setTimeout(flush, 700)
+    const timer = window.setTimeout(flushEdits, 700)
     return () => window.clearTimeout(timer)
-  }, [title])
+  }, [title, note])
   // …and flush whatever is pending when the screen goes away.
-  useEffect(
-    () => () => {
-      const { task: t, title: typed, brain: b } = latest.current
-      const next = typed.trim()
-      if (t && next && next !== t.title) void b.updateTask(t, { title: next })
-    },
-    [],
-  )
+  useEffect(() => () => flushEdits(), [])
+
+  function flushEdits() {
+    const { task: t, title: typed, note: noted, brain: b } = latest.current
+    if (!t) return
+    const patch: { title?: string; notes?: string } = {}
+    const nextTitle = typed.trim()
+    if (nextTitle && nextTitle !== t.title) patch.title = nextTitle
+    const nextNote = noted.slice(0, NOTE_LIMIT)
+    if (nextNote !== t.notes) patch.notes = nextNote
+    if (Object.keys(patch).length) void b.updateTask(t, patch)
+  }
 
   const back = (
     <a href={href.today} className="-ml-1 mb-3 inline-flex items-center gap-0.5 text-[16px] font-semibold text-accent">
@@ -59,12 +67,18 @@ export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number
   }
 
   const saveTitle = () => {
-    const next = title.trim()
-    if (!next) setTitle(task.title)
-    else if (next !== task.title) void brain.updateTask(task, { title: next })
+    if (!title.trim()) setTitle(task.title)
+    else flushEdits()
   }
 
   const due = describeDue(task.due_date, task.due_time, task.done)
+  const repeating = repeats(task)
+  const nextPreview = nextDue(
+    task.due_date ?? today(),
+    task.due_time,
+    task.repeat_every ?? 1,
+    task.repeat_unit ?? 'day',
+  )
 
   return (
     <>
@@ -178,6 +192,150 @@ export function TaskDetailView({ brain, taskId }: { brain: Brain; taskId: number
               </button>
             )}
           </div>
+        )}
+      </section>
+
+      <SectionLabel>Note</SectionLabel>
+      <section className="rounded-2xl border border-border bg-surface-1 p-4">
+        <label className="flex cursor-pointer items-center gap-3">
+          <StickyNote size={20} className={noteOpen ? 'text-accent' : 'text-ink-muted'} aria-hidden="true" />
+          <span className="flex-1 text-[16px] font-semibold text-ink">Add a note</span>
+          <input
+            type="checkbox"
+            checked={noteOpen}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setNoteOpen(true)
+                return
+              }
+              // Closing clears the note, with a way back.
+              const previous = task.notes
+              setNoteOpen(false)
+              setNote('')
+              void brain.updateTask(task, { notes: '' })
+              if (previous) {
+                brain.showToast('Note removed', () => {
+                  setNote(previous)
+                  setNoteOpen(true)
+                  void brain.updateTask(task, { notes: previous })
+                  brain.dismissToast()
+                })
+              }
+            }}
+            className="peer sr-only"
+          />
+          <span
+            aria-hidden="true"
+            className="flex h-[26px] w-[26px] items-center justify-center rounded-md border-[1.5px] border-border-strong text-accent-ink transition-colors peer-checked:border-accent peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent/60"
+          >
+            {noteOpen && <Check size={15} strokeWidth={3} />}
+          </span>
+        </label>
+
+        {noteOpen && (
+          <>
+            <label htmlFor="task-note" className="sr-only">
+              Note
+            </label>
+            <textarea
+              id="task-note"
+              value={note}
+              maxLength={NOTE_LIMIT}
+              rows={3}
+              placeholder="Anything worth remembering about this task…"
+              onChange={(e) => setNote(e.target.value.slice(0, NOTE_LIMIT))}
+              onBlur={flushEdits}
+              className="mt-3 w-full resize-none rounded-xl border border-border bg-surface-0 px-3.5 py-2.5 text-[16px] leading-snug text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
+            />
+            <p className={cn('mt-1 text-right text-[13px]', note.length >= NOTE_LIMIT ? 'text-warning' : 'text-ink-muted')}>
+              {note.length}/{NOTE_LIMIT}
+            </p>
+          </>
+        )}
+      </section>
+
+      <SectionLabel>Repeat</SectionLabel>
+      <section className="rounded-2xl border border-border bg-surface-1 p-4">
+        <label className="flex cursor-pointer items-center gap-3">
+          <Repeat size={20} className={repeating ? 'text-accent' : 'text-ink-muted'} aria-hidden="true" />
+          <span className="flex-1 text-[16px] font-semibold text-ink">Repeats</span>
+          <input
+            type="checkbox"
+            checked={repeating}
+            onChange={(e) =>
+              brain.updateTask(
+                task,
+                e.target.checked
+                  ? {
+                      repeat_every: 1,
+                      repeat_unit: 'day',
+                      // A repeat needs something to count from.
+                      ...(task.due_date ? {} : { due_date: today() }),
+                    }
+                  : { repeat_every: null, repeat_unit: null },
+              )
+            }
+            className="peer sr-only"
+          />
+          <span
+            aria-hidden="true"
+            className="flex h-[26px] w-[26px] items-center justify-center rounded-md border-[1.5px] border-border-strong text-accent-ink transition-colors peer-checked:border-accent peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent/60"
+          >
+            {repeating && <Check size={15} strokeWidth={3} />}
+          </span>
+        </label>
+
+        {repeating && (
+          <>
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-[16px] text-ink">Every</span>
+              <label htmlFor="repeat-every" className="sr-only">
+                Repeat interval
+              </label>
+              <input
+                id="repeat-every"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={365}
+                value={task.repeat_every ?? 1}
+                onChange={(e) => {
+                  const n = Math.min(365, Math.max(1, Math.round(Number(e.target.value) || 1)))
+                  void brain.updateTask(task, { repeat_every: n })
+                }}
+                className="h-11 w-20 rounded-xl border border-border bg-surface-0 px-3 text-center text-[16px] font-semibold text-ink tabular-nums focus:border-accent focus:outline-none"
+              />
+              <label htmlFor="repeat-unit" className="sr-only">
+                Repeat unit
+              </label>
+              <select
+                id="repeat-unit"
+                value={task.repeat_unit ?? 'day'}
+                onChange={(e) => {
+                  const unit = e.target.value as RepeatUnit
+                  // An hourly repeat needs a time of day to count from.
+                  const needsTime = unit === 'hour' && !task.due_time
+                  const now = new Date()
+                  void brain.updateTask(task, {
+                    repeat_unit: unit,
+                    ...(needsTime
+                      ? { due_time: `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:00` }
+                      : {}),
+                  })
+                }}
+                className="h-11 flex-1 rounded-xl border border-border bg-surface-0 px-3 text-[16px] font-semibold text-ink focus:border-accent focus:outline-none"
+              >
+                {REPEAT_UNITS.map((u) => (
+                  <option key={u.value} value={u.value}>
+                    {(task.repeat_every ?? 1) === 1 ? u.one : u.many}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="mt-2 text-[13px] text-ink-muted">
+              Ticking it off moves it to {formatNext(nextPreview)} — it never sits here ticked.
+            </p>
+          </>
         )}
       </section>
 

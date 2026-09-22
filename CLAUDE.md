@@ -105,6 +105,23 @@ and record the version in `supabase_migrations.schema_migrations` so a later
 - `tasks.completed_at` is stamped by a trigger whenever `done` changes.
 - Habits have `archived` in the schema; the UI currently hard-deletes.
 
+## Notes and repeating tasks
+
+- A task's note is capped at **150 characters**, enforced in the form and by a
+  `check` constraint on `tasks.notes`.
+- Repeat is `repeat_every` + `repeat_unit` (`hour|day|week|month`), so "every 15
+  days" and "monthly on the 15th" both work. `src/lib/recurrence.ts` owns the
+  maths: it always advances at least one interval (finishing early must not
+  leave a task due again the same evening) and keeps stepping past missed
+  occurrences. `addMonths` clamps (31 Jan + 1 month = 28 Feb).
+  `npm run test:recurrence` runs the checks in `scripts/check-recurrence.ts`.
+- A repeating task never sits ticked: `toggleTask` in `use-brain.ts` records a
+  `task_completions` row and rolls `due_date`/`due_time` forward, with an Undo
+  toast. Reminders re-arm by themselves, since `reminder_log` is keyed by
+  `due_at`.
+- `task_completions` keeps a title snapshot and sets `task_id` to null when the
+  task is deleted, so history survives. Read-only at `#/settings/history`.
+
 ## Scope
 
 The real target is a **native iOS app** (Expo + EAS, no Mac available). This web

@@ -1,10 +1,11 @@
-import { Bell, BellOff, Check, LogOut, Share, Smartphone } from 'lucide-react'
+import { Bell, BellOff, Check, ChevronRight, History, LogOut, Share, Smartphone } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { PageTitle, SectionLabel } from '@/components/layout/app-shell'
 import type { Settings } from '@/hooks/use-settings'
 import type { ThemeMode } from '@/hooks/use-theme'
 import { REMINDER_OFFSETS, type ReminderOffset } from '@/lib/api'
 import { currentSubscription, disablePush, enablePush, pushSupport, sendTestPush } from '@/lib/push'
+import { href } from '@/lib/router'
 import { cn } from '@/lib/utils'
 
 const OFFSET_LABELS: Record<ReminderOffset, string> = {
@@ -110,6 +111,19 @@ export function SettingsView({ settings, mode, onMode, email, onSignOut }: Props
           {settings.error}
         </p>
       )}
+
+      <SectionLabel>History</SectionLabel>
+      <a
+        href={href.history}
+        className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-border bg-surface-1 px-4"
+      >
+        <History size={20} className="text-accent" aria-hidden="true" />
+        <span className="flex-1 text-[16px] text-ink">Completed tasks</span>
+        <ChevronRight size={18} className="text-ink-muted" aria-hidden="true" />
+      </a>
+      <p className="mt-2 px-4 text-[13px] text-ink-muted">
+        Every task you’ve ticked off, including each time a repeating task came round.
+      </p>
 
       <SectionLabel>Account</SectionLabel>
       <div className="overflow-hidden rounded-2xl border border-border bg-surface-1">

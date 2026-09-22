@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api, type Habit, type HabitEntry, type Task } from '@/lib/api'
 import type { DayKey } from '@/lib/dates'
+import { describeNext, nextDue, repeats } from '@/lib/recurrence'
+
+export type Toast = { id: number; message: string; undo?: () => void }
+
+/** The task's due moment as an instant, for the completion record. */
+const dueAtIso = (task: Task) =>
+  task.due_date ? new Date(`${task.due_date}T${task.due_time ?? '00:00:00'}`).toISOString() : null
 
 export function useBrain() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -8,6 +15,9 @@ export function useBrain() {
   const [entries, setEntries] = useState<HabitEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [toast, setToast] = useState<Toast | null>(null)
+
+  const showToast = useCallback((message: string, undo?: () => void) => setToast({ id: Date.now(), message, undo }), [])
 
   const refresh = useCallback(async () => {
     try {
@@ -68,19 +78,62 @@ export function useBrain() {
     [attempt],
   )
 
+  /**
+   * Ticking a task off. A repeating task never stays ticked: it records the
+   * completion and moves to its next occurrence, with an Undo.
+   */
   const toggleTask = useCallback(
     (task: Task) =>
       attempt(async () => {
-        const next = !task.done
-        setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, done: next } : t)))
-        const saved = await api.tasks.update(task.id, { done: next })
+        if (task.done) {
+          setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, done: false } : t)))
+          const saved = await api.tasks.update(task.id, { done: false })
+          setTasks((prev) => prev.map((t) => (t.id === saved.id ? saved : t)))
+          await api.completions.removeLatestFor(task.id)
+          return
+        }
+
+        const completion = await api.completions.create({
+          task_id: task.id,
+          title: task.title,
+          due_at: dueAtIso(task),
+          was_recurring: repeats(task),
+        })
+
+        if (repeats(task) && task.due_date) {
+          const next = nextDue(task.due_date, task.due_time, task.repeat_every!, task.repeat_unit!)
+          setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, ...next } : t)))
+          const saved = await api.tasks.update(task.id, next)
+          setTasks((prev) => prev.map((t) => (t.id === saved.id ? saved : t)))
+          showToast(`Done — ${describeNext(next)}`, () =>
+            void attempt(async () => {
+              const back = { due_date: task.due_date, due_time: task.due_time }
+              setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, ...back } : t)))
+              await api.tasks.update(task.id, back)
+              await api.completions.remove(completion.id)
+              setToast(null)
+            }),
+          )
+          return
+        }
+
+        setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, done: true } : t)))
+        const saved = await api.tasks.update(task.id, { done: true })
         setTasks((prev) => prev.map((t) => (t.id === saved.id ? saved : t)))
+        showToast('Done', () =>
+          void attempt(async () => {
+            setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, done: false } : t)))
+            await api.tasks.update(task.id, { done: false })
+            await api.completions.remove(completion.id)
+            setToast(null)
+          }),
+        )
       }),
-    [attempt],
+    [attempt, showToast],
   )
 
   const updateTask = useCallback(
-    (task: Task, patch: Partial<Pick<Task, 'title' | 'due_date' | 'due_time' | 'priority'>>) =>
+    (task: Task, patch: Partial<Pick<Task, 'title' | 'notes' | 'due_date' | 'due_time' | 'priority' | 'repeat_every' | 'repeat_unit'>>) =>
       attempt(async () => {
         setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, ...patch } : t)))
         const saved = await api.tasks.update(task.id, patch)
@@ -141,6 +194,9 @@ export function useBrain() {
     loading,
     error,
     dismissError: () => setError(null),
+    toast,
+    showToast,
+    dismissToast: () => setToast(null),
     addTask,
     toggleTask,
     updateTask,

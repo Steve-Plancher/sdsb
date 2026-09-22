@@ -1,17 +1,20 @@
-import { CalendarDays, Flag, Plus, Trash2 } from 'lucide-react'
+import { CalendarDays, Flag, Plus, Repeat, StickyNote, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle } from '@/components/ui/check-circle'
 import type { Task } from '@/lib/api'
 import { href } from '@/lib/router'
 import { describeDue, priorityLabel, priorityTone } from '@/lib/tasks'
+import { repeats } from '@/lib/recurrence'
 import { cn } from '@/lib/utils'
 
 /** The one-line summary under a task: due date and priority, only when set. */
 function TaskMeta({ task }: { task: Task }) {
   const due = describeDue(task.due_date, task.due_time, task.done)
   const hasPriority = task.priority !== 'none'
-  if (!due && !hasPriority) return null
+  const repeating = repeats(task)
+  const hasNote = task.notes.trim() !== ''
+  if (!due && !hasPriority && !repeating && !hasNote) return null
   return (
     <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[13px] font-semibold">
       {due && (
@@ -20,6 +23,8 @@ function TaskMeta({ task }: { task: Task }) {
           {due.overdue || due.label.startsWith('Today') || due.label.startsWith('Tomorrow') ? due.label : `Due ${due.label}`}
         </span>
       )}
+      {repeating && <Repeat size={13} className="text-ink-muted" aria-label="Repeats" />}
+      {hasNote && <StickyNote size={13} className="text-ink-muted" aria-label="Has a note" />}
       {hasPriority && (
         <span className={cn('inline-flex items-center gap-1', task.done ? 'text-ink-muted' : priorityTone[task.priority])}>
           <Flag size={13} className="fill-current" aria-hidden="true" />
