@@ -35,8 +35,13 @@ branding/v1/final/    Growth Rings brand pack (tokens JSON is the reference)
 - Every table has `user_id default auth.uid()` and row-level security limiting
   each row to its owner. `anon` has no table privileges at all.
 - Public sign-ups are **disabled** on the Supabase project. Steve's account was
-  created via the admin API; sign-in is an email magic link with
-  `shouldCreateUser: false`.
+  created via the admin API. Sign-in is **password** (min length 10, enforced
+  server-side) or an **email magic link** (`shouldCreateUser: false`).
+- Supabase's built-in mailer sends only **2 emails/hour** — that's why the
+  password option exists. Raising it needs custom SMTP.
+- "Remember this device" (`src/lib/supabase.ts`) picks the session store:
+  localStorage when ticked (default), sessionStorage when not. Sessions never
+  expire server-side (`sessions_timebox` and inactivity timeout are 0).
 - The secret/service key never goes in this repo or in Vercel env.
 
 ## Applying migrations
