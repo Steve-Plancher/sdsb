@@ -37,8 +37,19 @@ function useTheme() {
     }
   }, [theme])
 
-  const effective: Theme =
-    theme ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  // Track the OS setting live, so the icon stays right if the phone flips to
+  // dark mode at sunset while SDSB is open.
+  const [systemDark, setSystemDark] = useState(
+    () => window.matchMedia('(prefers-color-scheme: dark)').matches,
+  )
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-color-scheme: dark)')
+    const onChange = (e: MediaQueryListEvent) => setSystemDark(e.matches)
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+
+  const effective: Theme = theme ?? (systemDark ? 'dark' : 'light')
 
   return { theme: effective, toggle: () => setTheme(effective === 'dark' ? 'light' : 'dark') }
 }
