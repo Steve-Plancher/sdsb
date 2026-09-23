@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle } from '@/components/ui/check-circle'
 import type { Task } from '@/lib/api'
+import { toKey } from '@/lib/dates'
 import { href } from '@/lib/router'
 import { describeDue, priorityLabel, priorityTone } from '@/lib/tasks'
 import { repeats } from '@/lib/recurrence'
@@ -53,7 +54,11 @@ export function TaskList({ tasks, onAdd, onToggle, onRemove }: Props) {
   }
 
   const open = tasks.filter((t) => !t.done)
-  const done = tasks.filter((t) => t.done)
+  // A finished task stays for the rest of the day — long enough to see what you
+  // did and to undo it — then lives on in Settings → Completed tasks.
+  const todayKey = toKey(new Date())
+  const done = tasks.filter((t) => t.done && t.completed_at && toKey(new Date(t.completed_at)) === todayKey)
+  const visible = [...open, ...done]
 
   return (
     <div>
@@ -74,13 +79,13 @@ export function TaskList({ tasks, onAdd, onToggle, onRemove }: Props) {
         </Button>
       </form>
 
-      {tasks.length === 0 ? (
+      {visible.length === 0 ? (
         <p className="border-t border-border px-4 py-5 text-center text-[15px] text-ink-muted">
-          Nothing yet. Add your first task above.
+          {tasks.length === 0 ? 'Nothing yet. Add your first task above.' : 'All clear. Yesterday’s are in your history.'}
         </p>
       ) : (
         <ul className="divide-y divide-border border-t border-border">
-          {[...open, ...done].map((task) => (
+          {visible.map((task) => (
             <li key={task.id} className="group flex min-h-[52px] items-center gap-3 px-4">
               <CheckCircle
                 checked={task.done}

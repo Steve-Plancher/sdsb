@@ -119,6 +119,9 @@ and record the version in `supabase_migrations.schema_migrations` so a later
   `task_completions` row and rolls `due_date`/`due_time` forward, with an Undo
   toast. Reminders re-arm by themselves, since `reminder_log` is keyed by
   `due_at`.
+- Today's list shows open tasks plus anything finished **today** (so it can be
+  seen and undone); older finished tasks drop off and live in the history.
+  Tasks are never auto-deleted.
 - `task_completions` keeps a title snapshot and sets `task_id` to null when the
   task is deleted, so history survives. Read-only at `#/settings/history`.
 
