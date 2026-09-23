@@ -10,7 +10,7 @@ type Props = {
 }
 
 const RAMP = ['var(--seq-0)', 'var(--seq-1)', 'var(--seq-2)', 'var(--seq-3)', 'var(--seq-4)']
-const WEEKDAYS = ['Mon', '', 'Wed', '', 'Fri', '', 'Sun']
+const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 /** Continuous magnitude -> one hue, light to dark. Never a rainbow. */
 function rampStep(count: number, total: number) {
@@ -42,19 +42,18 @@ export function HabitHeatmap({ countsByDay, total, weeks = 26 }: Props) {
     return out
   }, [days])
 
-  // Label a column when its month starts, but skip any label that would sit
-  // closer than three columns to the previous one (they'd overlap).
-  const monthLabels = useMemo(() => {
-    let last = -3
-    return columns.map((col, i) => {
-      const first = new Date(`${col[0]}T00:00:00`)
-      const prev = i > 0 ? new Date(`${columns[i - 1][0]}T00:00:00`) : null
-      if (prev && prev.getMonth() === first.getMonth()) return ''
-      if (i - last < 3) return ''
-      last = i
-      return first.toLocaleString(undefined, { month: 'short' })
-    })
-  }, [columns])
+  // Label the first visible month and every month transition. Month names are
+  // allowed to overflow their own cell, matching the existing label style.
+  const monthLabels = useMemo(
+    () =>
+      columns.map((col, i) => {
+        const first = new Date(`${col[0]}T00:00:00`)
+        const prev = i > 0 ? new Date(`${columns[i - 1][0]}T00:00:00`) : null
+        if (prev && prev.getMonth() === first.getMonth() && prev.getFullYear() === first.getFullYear()) return ''
+        return first.toLocaleString(undefined, { month: 'short' })
+      }),
+    [columns],
+  )
 
   return (
     <div className="relative min-w-0">
