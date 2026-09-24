@@ -4,13 +4,13 @@ import { PageTitle, SectionLabel } from '@/components/layout/app-shell'
 import { Button } from '@/components/ui/button'
 import { StreakBadge } from '@/components/ui/check-circle'
 import type { Brain } from '@/hooks/use-brain'
-import { currentStreak, fromKey, lastNDays, prettyDay, today } from '@/lib/dates'
+import { currentStreak, currentWeek, fromKey, prettyDay, today } from '@/lib/dates'
 import { href } from '@/lib/router'
 import { cn } from '@/lib/utils'
 
 export function HabitsView({ brain }: { brain: Brain }) {
   const [draft, setDraft] = useState('')
-  const week = lastNDays(7)
+  const week = currentWeek()
   const day = today()
 
   function submit(e: React.FormEvent) {
@@ -61,11 +61,13 @@ export function HabitsView({ brain }: { brain: Brain }) {
                   {week.map((d) => {
                     const on = ticked.has(d)
                     const isToday = d === day
+                    const future = d > day
                     return (
                       <button
                         key={d}
                         type="button"
                         onClick={() => brain.toggleEntry(habit.id, d)}
+                        disabled={future}
                         aria-pressed={on}
                         aria-label={`${habit.name}, ${prettyDay(d)}${on ? ', done' : ''}`}
                         className={cn(
@@ -74,7 +76,9 @@ export function HabitsView({ brain }: { brain: Brain }) {
                             ? 'border-transparent bg-accent text-accent-ink'
                             : isToday
                               ? 'border-accent bg-surface-0 text-ink'
-                              : 'border-border bg-surface-0 text-ink-muted hover:border-accent',
+                              : future
+                                ? 'border-border bg-surface-0 text-ink-muted opacity-40'
+                                : 'border-border bg-surface-0 text-ink-muted hover:border-accent',
                         )}
                       >
                         <span>{fromKey(d).toLocaleDateString(undefined, { weekday: 'narrow' })}</span>

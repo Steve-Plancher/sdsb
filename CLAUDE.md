@@ -83,6 +83,26 @@ and record the version in `supabase_migrations.schema_migrations` so a later
   `supabase functions deploy send-reminders --use-api --no-verify-jwt`.
 - `public/sw.js` shows the push and opens `#/tasks/<id>` when it's tapped.
 
+## Versioning
+
+Every shipped change gets a version. `package.json` holds it; `vite.config.ts`
+injects it into the build along with the commit and build time, and it shows at
+the bottom of Settings (`src/lib/version.ts`).
+
+After committing a change:
+
+```bash
+npm run release          # fix or small change   1.0.0 -> 1.0.1
+npm run release minor    # new feature           1.0.1 -> 1.1.0
+npm run release major    # big rework            1.1.0 -> 2.0.0
+```
+
+That bumps the version, tags the commit `vX.Y.Z`, pushes both, and publishes a
+GitHub release listing the commits since the last one. Vercel deploys from the
+push, so the number in Settings always matches what's live. The script refuses
+to run with uncommitted changes or when main and origin/main differ.
+
+
 ## Conventions
 
 - **Dates are `YYYY-MM-DD` local-time strings** (`DayKey`), never `Date` objects

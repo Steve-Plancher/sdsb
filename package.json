@@ -1,14 +1,15 @@
 {
   "name": "sdsb",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:recurrence": "esbuild scripts/check-recurrence.ts --bundle --platform=node --format=esm --alias:@=./src --outfile=node_modules/.tmp/check-recurrence.mjs --log-level=error && node node_modules/.tmp/check-recurrence.mjs"
+    "test:recurrence": "esbuild scripts/check-recurrence.ts --bundle --platform=node --format=esm --alias:@=./src --outfile=node_modules/.tmp/check-recurrence.mjs --log-level=error && node node_modules/.tmp/check-recurrence.mjs",
+    "release": "bash scripts/release.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",

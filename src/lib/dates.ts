@@ -78,3 +78,9 @@ export function weekdayTotals(days: DayKey[], countsByDay: Map<DayKey, number>):
   for (const d of days) totals[fromKey(d).getDay()] += countsByDay.get(d) ?? 0
   return totals
 }
+
+/** This calendar week, Sunday → Saturday (the order the app shows everywhere). */
+export function currentWeek(now = new Date()): DayKey[] {
+  const sunday = startOfWeek(now, { weekStartsOn: 0 })
+  return Array.from({ length: 7 }, (_, i) => toKey(addDays(sunday, i)))
+}

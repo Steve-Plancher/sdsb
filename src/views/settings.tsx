@@ -6,6 +6,7 @@ import type { ThemeMode } from '@/hooks/use-theme'
 import { REMINDER_OFFSETS, type ReminderOffset } from '@/lib/api'
 import { currentSubscription, disablePush, enablePush, pushSupport, sendTestPush } from '@/lib/push'
 import { href } from '@/lib/router'
+import { APP_VERSION, buildDate, GIT_SHA, releaseUrl } from '@/lib/version'
 import { cn } from '@/lib/utils'
 
 const OFFSET_LABELS: Record<ReminderOffset, string> = {
@@ -140,6 +141,18 @@ export function SettingsView({ settings, mode, onMode, email, onSignOut }: Props
           Sign out
         </button>
       </div>
+
+      <footer className="mt-8 text-center">
+        <p className="text-[15px] font-semibold text-ink">
+          SDSB{' '}
+          <a href={releaseUrl} target="_blank" rel="noreferrer" className="text-accent">
+            v{APP_VERSION}
+          </a>
+        </p>
+        <p className="mt-0.5 text-[13px] text-ink-muted tabular-nums">
+          {GIT_SHA} · {buildDate()}
+        </p>
+      </footer>
     </>
   )
 }
