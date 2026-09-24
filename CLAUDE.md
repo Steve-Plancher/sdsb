@@ -102,6 +102,15 @@ GitHub release listing the commits since the last one. Vercel deploys from the
 push, so the number in Settings always matches what's live. The script refuses
 to run with uncommitted changes or when main and origin/main differ.
 
+**Checking a deploy landed:** the build time is baked in, so every build has a
+different bundle hash — comparing the local hash to the live one no longer
+works. Instead grep the live bundle for the commit:
+
+```bash
+curl -s https://sdsb.vercel.app/assets/$(curl -s https://sdsb.vercel.app |
+  grep -oE 'index-[A-Za-z0-9_-]+\.js') | grep -c "$(git rev-parse --short=7 HEAD)"
+```
+
 
 ## Conventions
 
